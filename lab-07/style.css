@@ -1,0 +1,242 @@
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            padding: 20px;
+        }
+
+        .calculator-container {
+            width: 100%;
+            max-width: 400px;
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .calculator-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: rgba(0, 0, 0, 0.2);
+            color: white;
+        }
+
+        .calculator-title {
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        .nav-menu {
+            position: relative;
+        }
+
+        .menu-toggle {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background-color 0.3s;
+        }
+
+        .menu-toggle:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .sub-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: rgba(30, 30, 30, 0.95);
+            border-radius: 10px;
+            padding: 10px 0;
+            min-width: 200px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            display: none;
+            z-index: 100;
+        }
+
+        .sub-menu.active {
+            display: block;
+        }
+
+        .sub-menu-item {
+            padding: 12px 20px;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sub-menu-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .sub-menu-item i {
+            font-size: 1.2rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .display {
+            padding: 20px;
+            text-align: right;
+            background-color: rgba(0, 0, 0, 0.3);
+            color: white;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        .calculation {
+            font-size: 1.2rem;
+            min-height: 28px;
+            opacity: 0.7;
+            word-wrap: break-word;
+        }
+
+        .result {
+            font-size: 2.5rem;
+            font-weight: 500;
+            margin-top: 10px;
+            word-wrap: break-word;
+        }
+
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1px;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .key {
+            background-color: rgba(30, 30, 30, 0.8);
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            padding: 20px 10px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .key:hover {
+            background-color: rgba(50, 50, 50, 0.8);
+        }
+
+        .key:active {
+            background-color: rgba(70, 70, 70, 0.8);
+        }
+
+        .operator {
+            background-color: rgba(255, 149, 0, 0.8);
+        }
+
+        .operator:hover {
+            background-color: rgba(255, 149, 0, 0.9);
+        }
+
+        .operator:active {
+            background-color: rgb(0, 0, 0);
+        }
+
+        .special {
+            background-color: rgba(100, 100, 100, 0.8);
+        }
+
+        .zero {
+            grid-column: span 2;
+        }
+
+        .scientific-panel {
+            display: none;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1px;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+        }
+
+        .scientific-panel.active {
+            display: grid;
+        }
+
+        .conversion-panel {
+            display: none;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.2);
+            color: white;
+        }
+
+        .conversion-panel.active {
+            display: block;
+        }
+
+        .conversion-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .form-group label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .form-group input, .form-group select {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background-color: rgba(0, 0, 0, 0.3);
+            color: white;
+            font-size: 1rem;
+        }
+
+        .conversion-result {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
+            font-size: 1.2rem;
+            text-align: center;
+        }
+
+        .currency-info {
+            font-size: 0.8rem;
+            opacity: 0.7;
+            margin-top: 5px;
+        }
+
+        .hidden {
+            display: none;
+        }
