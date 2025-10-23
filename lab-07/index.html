@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Advanced Calculator</title>
+    
+</head>
+<body>
+    <div class="calculator-container">
+        <div class="calculator-header">
+            <div class="calculator-title">Advanced Calculator</div>
+            <div class="nav-menu">
+                <button class="menu-toggle">⋯</button>
+                <div class="sub-menu">
+                    <div class="sub-menu-item" data-mode="basic">
+                        <i>≡</i> Basic Mode
+                    </div>
+                    <div class="sub-menu-item" data-mode="scientific">
+                        <i>π</i> Scientific Mode
+                    </div>
+                    <div class="sub-menu-item" data-mode="unit">
+                        <i>⇄</i> Unit Conversion
+                    </div>
+                    <div class="sub-menu-item" data-mode="currency">
+                        <i>$</i> Currency Conversion
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="display">
+            <div class="calculation"></div>
+            <div class="result">0</div>
+        </div>
+
+        <!-- Scientific Panel -->
+        <div class="scientific-panel">
+            <button class="key scientific-key" data-func="sin">sin</button>
+            <button class="key scientific-key" data-func="cos">cos</button>
+            <button class="key scientific-key" data-func="tan">tan</button>
+            <button class="key scientific-key" data-func="log">log</button>
+            <button class="key scientific-key" data-func="ln">ln</button>
+            <button class="key scientific-key" data-func="sqrt">√</button>
+            <button class="key scientific-key" data-func="pow">x^y</button>
+            <button class="key scientific-key" data-func="fact">x!</button>
+            <button class="key scientific-key" data-func="pi">π</button>
+            <button class="key scientific-key" data-func="e">e</button>
+        </div>
+
+        <!-- Unit Conversion Panel -->
+        <div class="conversion-panel">
+            <div class="conversion-form">
+                <div class="form-group">
+                    <label for="conversion-type">Conversion Type</label>
+                    <select id="conversion-type">
+                        <option value="length">Length</option>
+                        <option value="weight">Weight</option>
+                        <option value="temperature">Temperature</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="from-unit">From</label>
+                    <select id="from-unit">
+                        <option value="meter">Meter</option>
+                        <option value="kilometer">Kilometer</option>
+                        <option value="centimeter">Centimeter</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="to-unit">To</label>
+                    <select id="to-unit">
+                        <option value="foot">Foot</option>
+                        <option value="mile">Mile</option>
+                        <option value="inch">Inch</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="input-value">Value</label>
+                    <input type="number" id="input-value" placeholder="Enter value">
+                </div>
+                <button class="key" id="convert-btn">Convert</button>
+                <div class="conversion-result">
+                    Result: <span id="conversion-result">-</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Currency Conversion Panel -->
+        <div class="conversion-panel">
+            <div class="conversion-form">
+                <div class="form-group">
+                    <label for="from-currency">From Currency</label>
+                    <select id="from-currency">
+                        <option value="USD">USD - US Dollar</option>
+                        <option value="EUR">EUR - Euro</option>
+                        <option value="GBP">GBP - British Pound</option>
+                        <option value="JPY">JPY - Japanese Yen</option>
+                        <option value="CAD">CAD - Canadian Dollar</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="to-currency">To Currency</label>
+                    <select id="to-currency">
+                        <option value="EUR">EUR - Euro</option>
+                        <option value="USD">USD - US Dollar</option>
+                        <option value="GBP">GBP - British Pound</option>
+                        <option value="JPY">JPY - Japanese Yen</option>
+                        <option value="CAD">CAD - Canadian Dollar</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="currency-amount">Amount</label>
+                    <input type="number" id="currency-amount" placeholder="Enter amount">
+                </div>
+                <button class="key" id="currency-convert-btn">Convert</button>
+                <div class="conversion-result">
+                    Result: <span id="currency-result">-</span>
+                    <div class="currency-info">Exchange rates are for demonstration only</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Basic Calculator Keypad -->
+        <div class="keypad">
+            <button class="key special" data-action="clear">C</button>
+            <button class="key special" data-action="backspace">⌫</button>
+            <button class="key special" data-action="percentage">%</button>
+            <button class="key operator" data-operator="÷">÷</button>
+            
+            <button class="key" data-number="7">7</button>
+            <button class="key" data-number="8">8</button>
+            <button class="key" data-number="9">9</button>
+            <button class="key operator" data-operator="×">×</button>
+            
+            <button class="key" data-number="4">4</button>
+            <button class="key" data-number="5">5</button>
+            <button class="key" data-number="6">6</button>
+            <button class="key operator" data-operator="-">-</button>
+            
+            <button class="key" data-number="1">1</button>
+            <button class="key" data-number="2">2</button>
+            <button class="key" data-number="3">3</button>
+            <button class="key operator" data-operator="+">+</button>
+            
+            <button class="key zero" data-number="0">0</button>
+            <button class="key" data-number=".">.</button>
+            <button class="key operator" data-operator="=">=</button>
+        </div>
+    </div>
+
+    <script>
+        // Calculator state
+        let currentInput = '0';
+        let previousInput = '';
+        let operator = null;
+        let waitingForNewInput = false;
+        let calculationString = '';
+
+        // DOM Elements
+        const displayResult = document.querySelector('.result');
+        const displayCalculation = document.querySelector('.calculation');
+        const menuToggle = document.querySelector('.menu-toggle');
+        const subMenu = document.querySelector('.sub-menu');
+        const scientificPanel = document.querySelector('.scientific-panel');
+        const unitPanel = document.querySelectorAll('.conversion-panel')[0];
+        const currencyPanel = document.querySelectorAll('.conversion-panel')[1];
+        const keypad = document.querySelector('.keypad');
+
+        // Event Listeners for menu
+        menuToggle.addEventListener('click', () => {
+            subMenu.classList.toggle('active');
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.nav-menu')) {
+                subMenu.classList.remove('active');
+            }
+        });
+
+        // Menu item selection
+        document.querySelectorAll('.sub-menu-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const mode = item.getAttribute('data-mode');
+                switchMode(mode);
+                subMenu.classList.remove('active');
+            });
+        });
+
+        // Switch between calculator modes
+        function switchMode(mode) {
+            // Hide all panels first
+            scientificPanel.classList.remove('active');
+            unitPanel.classList.remove('active');
+            currencyPanel.classList.remove('active');
+            keypad.classList.remove('hidden');
+
+            // Show the selected panel
+            switch(mode) {
+                case 'basic':
+                    // Default calculator view
+                    break;
+                case 'scientific':
+                    scientificPanel.classList.add('active');
+                    break;
+                case 'unit':
+                    unitPanel.classList.add('active');
+                    keypad.classList.add('hidden');
+                    break;
+                case 'currency':
+                    currencyPanel.classList.add('active');
+                    keypad.classList.add('hidden');
+                    break;
+            }
+        }
+
+        // Basic Calculator Functionality
+        document.querySelectorAll('.key').forEach(button => {
+            button.addEventListener('click', () => {
+                const action = button.getAttribute('data-action');
+                const number = button.getAttribute('data-number');
+                const operatorValue = button.getAttribute('data-operator');
+
+                if (number !== null) {
+                    inputNumber(number);
+                } else if (operatorValue !== null) {
+                    inputOperator(operatorValue);
+                } else if (action !== null) {
+                    handleAction(action);
+                }
+
+                updateDisplay();
+            });
+        });
+
+        // Scientific Calculator Functionality
+        document.querySelectorAll('.scientific-key').forEach(button => {
+            button.addEventListener('click', () => {
+                const func = button.getAttribute('data-func');
+                handleScientificFunction(func);
+                updateDisplay();
+            });
+        });
+
+        // Input number
+        function inputNumber(num) {
+            if (waitingForNewInput) {
+                currentInput = num;
+                waitingForNewInput = false;
+            } else {
+                currentInput = currentInput === '0' ? num : currentInput + num;
+            }
+        }
+
+        // Input operator
+        function inputOperator(nextOperator) {
+            const inputValue = parseFloat(currentInput);
+
+            if (operator && waitingForNewInput) {
+                operator = nextOperator;
+                return;
+            }
+
+            if (previousInput === '') {
+                previousInput = currentInput;
+            } else if (operator) {
+                const result = calculate(previousInput, currentInput, operator);
+                
+                if (result === 'Error' || !isFinite(result)) {
+                    currentInput = 'Error';
+                    previousInput = '';
+                    operator = null;
+                    waitingForNewInput = true;
+                    return;
+                }
+                
+                currentInput = `${parseFloat(result.toFixed(10))}`;
+                previousInput = currentInput;
+            }
+
+            waitingForNewInput = true;
+            operator = nextOperator;
+            calculationString = `${previousInput} ${operator}`;
+        }
+
+        // Handle actions (clear, backspace, etc.)
+        function handleAction(action) {
+            switch(action) {
+                case 'clear':
+                    currentInput = '0';
+                    previousInput = '';
+                    operator = null;
+                    waitingForNewInput = false;
+                    calculationString = '';
+                    break;
+                case 'backspace':
+                    if (currentInput.length > 1) {
+                        currentInput = currentInput.slice(0, -1);
+                    } else {
+                        currentInput = '0';
+                    }
+                    break;
+                case 'percentage':
+                    currentInput = `${parseFloat(currentInput) / 100}`;
+                    break;
+            }
+        }
+
+        // Handle scientific functions
+        function handleScientificFunction(func) {
+            const inputValue = parseFloat(currentInput);
+            let result;
+
+            switch(func) {
+                case 'sin':
+                    result = Math.sin(inputValue * Math.PI / 180);
+                    break;
+                case 'cos':
+                    result = Math.cos(inputValue * Math.PI / 180);
+                    break;
+                case 'tan':
+                    result = Math.tan(inputValue * Math.PI / 180);
+                    break;
+                case 'log':
+                    result = Math.log10(inputValue);
+                    break;
+                case 'ln':
+                    result = Math.log(inputValue);
+                    break;
+                case 'sqrt':
+                    result = Math.sqrt(inputValue);
+                    break;
+                case 'pow':
+                    previousInput = currentInput;
+                    operator = '^';
+                    waitingForNewInput = true;
+                    calculationString = `${previousInput} ^`;
+                    return;
+                case 'fact':
+                    result = factorial(inputValue);
+                    break;
+                case 'pi':
+                    result = Math.PI;
+                    break;
+                case 'e':
+                    result = Math.E;
+                    break;
+            }
+
+            if (result !== undefined) {
+                currentInput = `${parseFloat(result.toFixed(10))}`;
+                calculationString = `${func}(${inputValue})`;
+                waitingForNewInput = true;
+            }
+        }
+
+        // Calculate factorial
+        function factorial(n) {
+            if (n < 0) return NaN;
+            if (n === 0 || n === 1) return 1;
+            let result = 1;
+            for (let i = 2; i <= n; i++) {
+                result *= i;
+            }
+            return result;
+        }
+
+        // Perform calculation
+        function calculate(first, second, operator) {
+            const firstNum = parseFloat(first);
+            const secondNum = parseFloat(second);
+            
+            if (isNaN(firstNum) || isNaN(secondNum)) return 'Error';
+
+            switch(operator) {
+                case '+':
+                    return firstNum + secondNum;
+                case '-':
+                    return firstNum - secondNum;
+                case '×':
+                    return firstNum * secondNum;
+                case '÷':
+                    return secondNum !== 0 ? firstNum / secondNum : 'Error';
+                case '^':
+                    return Math.pow(firstNum, secondNum);
+                default:
+                    return secondNum;
+            }
+        }
+
+        // Update display
+        function updateDisplay() {
+            displayResult.textContent = currentInput;
+            displayCalculation.textContent = calculationString;
+        }
+
+        // Unit Conversion
+        document.getElementById('convert-btn').addEventListener('click', performUnitConversion);
+        document.getElementById('conversion-type').addEventListener('change', updateUnitOptions);
+
+        // Update unit options based on conversion type
+        function updateUnitOptions() {
+            const type = document.getElementById('conversion-type').value;
+            const fromUnit = document.getElementById('from-unit');
+            const toUnit = document.getElementById('to-unit');
+            
+            // Clear existing options
+            fromUnit.innerHTML = '';
+            toUnit.innerHTML = '';
+            
+            let options = [];
+            
+            switch(type) {
+                case 'length':
+                    options = ['meter', 'kilometer', 'centimeter', 'millimeter', 'mile', 'yard', 'foot', 'inch'];
+                    break;
+                case 'weight':
+                    options = ['kilogram', 'gram', 'milligram', 'pound', 'ounce'];
+                    break;
+                case 'temperature':
+                    options = ['celsius', 'fahrenheit', 'kelvin'];
+                    break;
+            }
+            
+            // Add options to both select elements
+            options.forEach(option => {
+                const fromOption = document.createElement('option');
+                fromOption.value = option;
+                fromOption.textContent = option.charAt(0).toUpperCase() + option.slice(1);
+                fromUnit.appendChild(fromOption);
+                
+                const toOption = document.createElement('option');
+                toOption.value = option;
+                toOption.textContent = option.charAt(0).toUpperCase() + option.slice(1);
+                toUnit.appendChild(toOption);
+            });
+            
+            // Set different default values
+            if (type === 'length') {
+                fromUnit.value = 'meter';
+                toUnit.value = 'foot';
+            } else if (type === 'weight') {
+                fromUnit.value = 'kilogram';
+                toUnit.value = 'pound';
+            } else if (type === 'temperature') {
+                fromUnit.value = 'celsius';
+                toUnit.value = 'fahrenheit';
+            }
+        }
+
+        // Initialize unit options
+        updateUnitOptions();
+
+        // Perform unit conversion
+        function performUnitConversion() {
+            const type = document.getElementById('conversion-type').value;
+            const fromUnit = document.getElementById('from-unit').value;
+            const toUnit = document.getElementById('to-unit').value;
+            const inputValue = parseFloat(document.getElementById('input-value').value);
+            
+            if (isNaN(inputValue)) {
+                document.getElementById('conversion-result').textContent = 'Invalid input';
+                return;
+            }
+            
+            let result;
+            
+            // Conversion factors
+            if (type === 'length') {
+                // Convert to meters first, then to target unit
+                const toMeter = {
+                    meter: 1,
+                    kilometer: 1000,
+                    centimeter: 0.01,
+                    millimeter: 0.001,
+                    mile: 1609.34,
+                    yard: 0.9144,
+                    foot: 0.3048,
+                    inch: 0.0254
+                };
+                
+                const valueInMeters = inputValue * toMeter[fromUnit];
+                result = valueInMeters / toMeter[toUnit];
+            } else if (type === 'weight') {
+                // Convert to kilograms first, then to target unit
+                const toKilogram = {
+                    kilogram: 1,
+                    gram: 0.001,
+                    milligram: 0.000001,
+                    pound: 0.453592,
+                    ounce: 0.0283495
+                };
+                
+                const valueInKilograms = inputValue * toKilogram[fromUnit];
+                result = valueInKilograms / toKilogram[toUnit];
+            } else if (type === 'temperature') {
+                // Temperature conversions are formula-based
+                if (fromUnit === 'celsius') {
+                    if (toUnit === 'fahrenheit') {
+                        result = (inputValue * 9/5) + 32;
+                    } else if (toUnit === 'kelvin') {
+                        result = inputValue + 273.15;
+                    } else {
+                        result = inputValue;
+                    }
+                } else if (fromUnit === 'fahrenheit') {
+                    if (toUnit === 'celsius') {
+                        result = (inputValue - 32) * 5/9;
+                    } else if (toUnit === 'kelvin') {
+                        result = (inputValue - 32) * 5/9 + 273.15;
+                    } else {
+                        result = inputValue;
+                    }
+                } else if (fromUnit === 'kelvin') {
+                    if (toUnit === 'celsius') {
+                        result = inputValue - 273.15;
+                    } else if (toUnit === 'fahrenheit') {
+                        result = (inputValue - 273.15) * 9/5 + 32;
+                    } else {
+                        result = inputValue;
+                    }
+                }
+            }
+            
+            document.getElementById('conversion-result').textContent = 
+                `${inputValue} ${fromUnit} = ${result.toFixed(6)} ${toUnit}`;
+        }
+
+        // Currency Conversion
+        document.getElementById('currency-convert-btn').addEventListener('click', performCurrencyConversion);
+
+        // Mock exchange rates (in a real app, you would fetch these from an API)
+        const exchangeRates = {
+            USD: { EUR: 0.85, GBP: 0.73, JPY: 110.25, CAD: 1.25 },
+            EUR: { USD: 1.18, GBP: 0.86, JPY: 129.75, CAD: 1.47 },
+            GBP: { USD: 1.37, EUR: 1.16, JPY: 151.25, CAD: 1.71 },
+            JPY: { USD: 0.0091, EUR: 0.0077, GBP: 0.0066, CAD: 0.011 },
+            CAD: { USD: 0.80, EUR: 0.68, GBP: 0.58, JPY: 90.91 }
+        };
+
+        // Perform currency conversion
+        function performCurrencyConversion() {
+            const fromCurrency = document.getElementById('from-currency').value;
+            const toCurrency = document.getElementById('to-currency').value;
+            const amount = parseFloat(document.getElementById('currency-amount').value);
+            
+            if (isNaN(amount)) {
+                document.getElementById('currency-result').textContent = 'Invalid amount';
+                return;
+            }
+            
+            let result;
+            
+            if (fromCurrency === toCurrency) {
+                result = amount;
+            } else {
+                // Check if we have the exchange rate
+                if (exchangeRates[fromCurrency] && exchangeRates[fromCurrency][toCurrency]) {
+                    result = amount * exchangeRates[fromCurrency][toCurrency];
+                } else {
+                    document.getElementById('currency-result').textContent = 'Conversion not available';
+                    return;
+                }
+            }
+            
+            document.getElementById('currency-result').textContent = 
+                `${amount.toFixed(2)} ${fromCurrency} = ${result.toFixed(2)} ${toCurrency}`;
+        }
+
+        // Keyboard support
+        document.addEventListener('keydown', (event) => {
+            if (event.key >= '0' && event.key <= '9') {
+                inputNumber(event.key);
+            } else if (event.key === '.') {
+                inputNumber('.');
+            } else if (event.key === '+') {
+                inputOperator('+');
+            } else if (event.key === '-') {
+                inputOperator('-');
+            } else if (event.key === '*') {
+                inputOperator('×');
+            } else if (event.key === '/') {
+                inputOperator('÷');
+            } else if (event.key === 'Enter' || event.key === '=') {
+                inputOperator('=');
+            } else if (event.key === 'Escape') {
+                handleAction('clear');
+            } else if (event.key === 'Backspace') {
+                handleAction('backspace');
+            }
+            
+            updateDisplay();
+            event.preventDefault();
+        });
+    </script>
+</body>
+</html>
